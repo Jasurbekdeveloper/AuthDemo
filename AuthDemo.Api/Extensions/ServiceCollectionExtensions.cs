@@ -1,6 +1,10 @@
-﻿using AuthDemo.Infrastructure.Context;
+﻿using AuthDemo.Api.Services;
+using AuthDemo.Infrastructure.Context;
+using AuthDemo.Infrastructure.Repositories.Movies;
+using AuthDemo.Infrastructure.Repositories.Users;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
+using System.Runtime.CompilerServices;
 
 namespace AuthDemo.Api.Extensions
 {
@@ -22,5 +26,20 @@ namespace AuthDemo.Api.Extensions
             });
             return services;
         }
+        public static IServiceCollection AddApplication(this IServiceCollection service)
+        {
+            service.AddScoped<IUserService, UserService>();
+            service.AddScoped<IMovieService, MovieService>();
+
+            return service;
+        }
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        {
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IMovieRepository, MovieRepository>();
+
+            return services;
+        }
     }
+
 }

@@ -3,7 +3,11 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContexts(builder.Configuration);
+builder.Services
+    .AddDbContexts(builder.Configuration)
+    .AddApplication()
+    .AddInfrastructure();
+
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

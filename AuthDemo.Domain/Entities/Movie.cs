@@ -9,7 +9,7 @@ namespace Library.Models.Domain
         public string Title { get; set; }
         public string Description { get; set; }
         public double Rating { get; set; }
-        public ICollection<UserMovie> UserMovies { get; set; }
+        public ICollection<UserMovie>? UserMovies { get; set; }
 
     }
 }

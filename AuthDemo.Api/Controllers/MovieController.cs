@@ -1,5 +1,5 @@
 using AuthDemo.Api.Services;
-using Library.Models.Domain;
+using AuthDemo.Aplication.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthDemo.Api.Controllers
@@ -15,65 +15,40 @@ namespace AuthDemo.Api.Controllers
         }
 
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetMovies()
+        public IActionResult GetMovies()
         {
-            try
-            {
-                return Ok(_movieService.GetList());
-            }
-            catch (Exception)
-            {
-                return BadRequest("Something went wrong");
-            }
+            var movies = this._movieService.RetrieveMovies();
+
+            return Ok(movies);
+
         }
-        [HttpGet("getById")]
-        public async Task<IActionResult> GetMovie(int Id)
+        [HttpGet("getById : Guid")]
+        public async ValueTask<ActionResult<MovieDto>> GetMovieById(Guid Id)
         {
-            try
-            {
-                return Ok(_movieService.MovieGet(Id));
-            }
-            catch (Exception)
-            {
-                return BadRequest("Something went wrong!");
-            }
+            var movie = await this._movieService
+                .RetrieveMovieByIdAsync(Id);
+            return Ok(movie);
         }
         [HttpPost("add")]
-        public async Task<IActionResult> AddMovie(User movie)
+        public async ValueTask<ActionResult<MovieDto>> AddMovie(MovieCreationDto movie)
         {
-            try
-            {
-                return Ok(_movieService.Create(movie));
-            }
-            catch (Exception)
-            {
-                return BadRequest("Something went wrong");
-            }
+            var createdMovie = this._movieService.CreateMovieAsync(movie);
+
+            return Created("", createdMovie);
         }
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateMovie(User movie)
+        public async ValueTask<ActionResult<MovieDto>> PutMovieAsync(MovieModificationDto movie)
         {
-            try
-            {
-                return Ok( _movieService.Update(movie));
-            }
-            catch (Exception)
-            {
-                return BadRequest("Something went wrong");
-            }
+            var updateMovie = this._movieService.ModifyMovieAsync(movie);
+            return Ok(updateMovie);
         }
-        [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteMovie(int userId)
+        [HttpDelete("delete : Guid")]
+        public async ValueTask<ActionResult<MovieDto>> DeleteMovie(Guid movieId)
         {
-            try
-            {
-                _movieService.Delete(userId);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest("Something went wrong");
-            }
+            var deletedMovie = await this._movieService
+                .RemoveMovieAsync(movieId);
+
+            return Ok(deletedMovie);
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using AuthDemo.Aplication.DTO;
-using AuthDemo.Aplication.DTO.Movies;
-using Library.Models.Domain;
 
 namespace AuthDemo.Api.Services
 {

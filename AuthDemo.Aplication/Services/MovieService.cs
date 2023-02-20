@@ -1,33 +1,71 @@
 ﻿using AuthDemo.Aplication.DTO;
-using Library.Models.Domain;
+using AuthDemo.Aplication.Mapper;
+using AuthDemo.Infrastructure.Repositories.Movies;
 
 namespace AuthDemo.Api.Services
 {
     public class MovieService : IMovieService
     {
-        public ValueTask<MovieDto> CreateMovieAsync(MovieCreationDto movieCreationDto)
+        private readonly IMovieRepository movieRepository;
+
+        public MovieService(IMovieRepository movieRepository)
         {
-            throw new NotImplementedException();
+            this.movieRepository = movieRepository;
         }
 
-        public ValueTask<MovieDto> ModifyMovieAsync(MovieModificationDto movieModificationDto)
+        public async ValueTask<MovieDto> CreateMovieAsync(MovieCreationDto movieCreationDto)
         {
-            throw new NotImplementedException();
+            var movie = MovieMapper.MapToMovie(movieCreationDto);
+
+            var storedMovie = await this.movieRepository.InsertAsync(movie);
+
+            await this.movieRepository.SaveChangesAsync();
+
+            return MovieMapper.MapToMovieDto(storedMovie);
         }
 
-        public ValueTask<MovieDto> RemoveMovieAsync(Guid movieId)
+        public async ValueTask<MovieDto> ModifyMovieAsync(
+            MovieModificationDto movieModificationDto)
         {
-            throw new NotImplementedException();
+            var movie = await this.movieRepository
+                .SelectByIdAsync(movieModificationDto.id);
+
+            MovieMapper.MapToMovie(movie, movieModificationDto);
+            await this.movieRepository.SaveChangesAsync();
+
+            var updateMovie = await this.movieRepository
+                .UpdateAsync(movie);
+
+            return MovieMapper.MapToMovieDto(updateMovie);
         }
 
-        public ValueTask<MovieDto> RetrieveMovieByIdAsync(Guid movieId)
+        public async ValueTask<MovieDto> RemoveMovieAsync(Guid movieId)
         {
-            throw new NotImplementedException();
+            var movie = await this.movieRepository
+                .SelectByIdAsync(movieId);
+
+            var removedMovie = await this.movieRepository
+                .DeleteAsync(movie);
+
+            await this.movieRepository.SaveChangesAsync();
+
+            return MovieMapper.MapToMovieDto(removedMovie);
+
         }
 
-        public ValueTask<IQueryable<MovieDto>> RetrieveMovies()
+        public async ValueTask<MovieDto> RetrieveMovieByIdAsync(Guid movieId)
         {
-            throw new NotImplementedException();
+            var movie = await this.movieRepository
+                .SelectByIdAsync(movieId);
+
+            return MovieMapper.MapToMovieDto(movie);
+        }
+
+        public async ValueTask<IQueryable<MovieDto>> RetrieveMovies()
+        {
+            var movies = this.movieRepository.SelectAll();
+
+            return movies.Select(u => MovieMapper.MapToMovieDto(u));
         }
     }
 }

@@ -2,6 +2,6 @@
 
 namespace AuthDemo.Infrastructure.Repositories.Movies;
 
-public interface IMovieRepository : IGenericRepository<User, Guid>
+public interface IMovieRepository : IGenericRepository<Movie, Guid>
 {
 }
