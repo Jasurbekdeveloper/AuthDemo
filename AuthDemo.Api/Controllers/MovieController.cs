@@ -1,5 +1,6 @@
 using AuthDemo.Api.Services;
 using AuthDemo.Aplication.DTO;
+using AuthDemo.Aplication.PagenationModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthDemo.Api.Controllers
@@ -15,9 +16,10 @@ namespace AuthDemo.Api.Controllers
         }
 
         [HttpGet("getAll")]
-        public IActionResult GetMovies()
+        public IActionResult GetAllMovies(
+             [FromQuery] QueryParam queryParameter)
         {
-            var movies = this._movieService.RetrieveMovies();
+            var movies = this._movieService.RetrieveMovies(queryParameter);
 
             return Ok(movies);
 

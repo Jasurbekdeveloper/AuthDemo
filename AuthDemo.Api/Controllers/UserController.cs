@@ -1,8 +1,8 @@
 ﻿using AuthDemo.Api.Services;
 using AuthDemo.Aplication.DTO;
+using AuthDemo.Aplication.PagenationModel;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AuthDemo.Api.Controllers
 {
@@ -16,10 +16,11 @@ namespace AuthDemo.Api.Controllers
         {
             this.userService = userService;
         }
-        [HttpGet("getAll")]
-        public IActionResult GetUsers()
+        [HttpGet("get")]
+        public IActionResult GetAllUsers(
+             [FromQuery] QueryParam queryParameter)
         {
-            var users = this.userService.RetrieveUsers();
+            var users = this.userService.RetrieveUsers(queryParameter);
 
             return Ok(users);
 

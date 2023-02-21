@@ -1,12 +1,24 @@
 ﻿using AuthDemo.Aplication.DTO;
 using AuthDemo.Aplication.Mapper;
+using AuthDemo.Aplication.PagenationModel;
+using AuthDemo.Aplication.QueryExtentions;
 using AuthDemo.Infrastructure.Repositories.Users;
+using Microsoft.AspNetCore.Http;
 
 namespace AuthDemo.Api.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly IHttpContextAccessor httpContextAccesssor;
+
+        public UserService(IUserRepository userRepository,
+            IHttpContextAccessor httpContextAccesssor)
+        {
+            this.userRepository = userRepository;
+            this.httpContextAccesssor = httpContextAccesssor;
+        }
+
         public async ValueTask<UserDto> CreateUserAsync(UserCreationDto userForCreationDto)
         {
             var user = UserMapper.MapToUser(userForCreationDto);
@@ -49,11 +61,14 @@ namespace AuthDemo.Api.Services
             return UserMapper.MapToUserDto(user);
         }
 
-        public async ValueTask<IQueryable<UserDto>> RetrieveUsers()
+        public async ValueTask<IQueryable<UserDto>> RetrieveUsers(QueryParam queryParam)
         {
             var users = this.userRepository.SelectAll();
 
-            return users.Select(u => UserMapper.MapToUserDto(u));
+            var pagedUser = users.PagedList(
+                httpContextAccesssor.HttpContext, queryParam);
+
+            return pagedUser.Select(u => UserMapper.MapToUserDto(u));
         }
     }
 }

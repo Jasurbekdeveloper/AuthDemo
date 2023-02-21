@@ -2,8 +2,10 @@
 using AuthDemo.Infrastructure.Context;
 using AuthDemo.Infrastructure.Repositories.Movies;
 using AuthDemo.Infrastructure.Repositories.Users;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.CompilerServices;
 
 namespace AuthDemo.Api.Extensions
@@ -37,6 +39,7 @@ namespace AuthDemo.Api.Extensions
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IMovieRepository, MovieRepository>();
+            services.AddHttpContextAccessor();
 
             return services;
         }

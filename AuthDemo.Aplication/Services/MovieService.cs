@@ -1,16 +1,23 @@
 ﻿using AuthDemo.Aplication.DTO;
 using AuthDemo.Aplication.Mapper;
+using AuthDemo.Aplication.PagenationModel;
+using AuthDemo.Aplication.QueryExtentions;
 using AuthDemo.Infrastructure.Repositories.Movies;
+using Microsoft.AspNetCore.Http;
 
 namespace AuthDemo.Api.Services
 {
     public class MovieService : IMovieService
     {
         private readonly IMovieRepository movieRepository;
+        private readonly IHttpContextAccessor httpContextAccesssor;
 
-        public MovieService(IMovieRepository movieRepository)
+
+        public MovieService(IMovieRepository movieRepository,
+            IHttpContextAccessor httpContextAccesssor)
         {
             this.movieRepository = movieRepository;
+            this.httpContextAccesssor = httpContextAccesssor;
         }
 
         public async ValueTask<MovieDto> CreateMovieAsync(MovieCreationDto movieCreationDto)
@@ -61,11 +68,16 @@ namespace AuthDemo.Api.Services
             return MovieMapper.MapToMovieDto(movie);
         }
 
-        public async ValueTask<IQueryable<MovieDto>> RetrieveMovies()
+        public async ValueTask<IQueryable<MovieDto>> RetrieveMovies(QueryParam queryParam)
         {
+
             var movies = this.movieRepository.SelectAll();
 
-            return movies.Select(u => MovieMapper.MapToMovieDto(u));
+            var pagedMovie = movies.PagedList(
+                httpContext: httpContextAccesssor.HttpContext,
+                queryParameter: queryParam);
+
+            return pagedMovie.Select(u => MovieMapper.MapToMovieDto(u));
         }
     }
 }
