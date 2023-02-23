@@ -18,7 +18,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(50)
             .IsRequired(true);
 
-        builder.Property(user => user.Password) 
+        builder.Property(user => user.PasswordHash) 
             .HasMaxLength(50)
             .IsRequired(true);
 
@@ -41,14 +41,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 Username = "Jasurbek",
                 Role = UserRole.Admin,
                 EmailAddres = "Jasurbek@gmail.com",
-                Password = "1234"
+                PasswordHash = "1234"
             },
             new User
             {
                 Id = Guid.Parse("96224645-c94c-4994-a15f-753ba0f1200b"),
                 Username = "Tohirjon",
                 EmailAddres = "Tohir@gmail.com",
-                Password = "7379"
+                PasswordHash = "7379"
             }
         };
     }
