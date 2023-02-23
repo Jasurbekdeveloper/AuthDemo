@@ -16,7 +16,7 @@ namespace AuthDemo.Api.Controllers
         {
             this.userService = userService;
         }
-        [HttpGet("get")]
+        [HttpGet]
         public IActionResult GetAllUsers(
              [FromQuery] QueryParam queryParameter)
         {
@@ -25,27 +25,27 @@ namespace AuthDemo.Api.Controllers
             return Ok(users);
 
         }
-        [HttpGet("getById : Guid")]
+        [HttpGet("Id : Guid")]
         public async ValueTask<ActionResult<UserDto>> GetUserById(Guid Id)
         {
             var user = await this.userService
                 .RetrieveUserByIdAsync(Id);
             return Ok(user);
         }
-        [HttpPost("add")]
+        [HttpPost]
         public async ValueTask<ActionResult<UserDto>> AddUser(UserCreationDto user)
         {
             var createdUser = this.userService.CreateUserAsync(user);
 
             return Created("", createdUser);
         }
-        [HttpPut("update")]
+        [HttpPut]
         public async ValueTask<ActionResult<UserDto>> PutUserAsync(UserModificationDto user)
         {
             var updateUser = this.userService.ModifyUserAsync(user);
             return Ok(updateUser);
         }
-        [HttpDelete("delete : Guid")]
+        [HttpDelete("userId: Guid")]
         public async ValueTask<ActionResult<UserDto>> DeleteUser(Guid userId)
         {
             var deletedUser = await this.userService

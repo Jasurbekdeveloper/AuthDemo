@@ -15,7 +15,7 @@ namespace AuthDemo.Api.Controllers
             _movieService = movieService;
         }
 
-        [HttpGet("getAll")]
+        [HttpGet]
         public IActionResult GetAllMovies(
              [FromQuery] QueryParam queryParameter)
         {
@@ -31,20 +31,20 @@ namespace AuthDemo.Api.Controllers
                 .RetrieveMovieByIdAsync(Id);
             return Ok(movie);
         }
-        [HttpPost("add")]
+        [HttpPost]
         public async ValueTask<ActionResult<MovieDto>> AddMovie(MovieCreationDto movie)
         {
             var createdMovie = this._movieService.CreateMovieAsync(movie);
 
             return Created("", createdMovie);
         }
-        [HttpPut("update")]
+        [HttpPut]
         public async ValueTask<ActionResult<MovieDto>> PutMovieAsync(MovieModificationDto movie)
         {
             var updateMovie = this._movieService.ModifyMovieAsync(movie);
             return Ok(updateMovie);
         }
-        [HttpDelete("delete : Guid")]
+        [HttpDelete("movieId : Guid")]
         public async ValueTask<ActionResult<MovieDto>> DeleteMovie(Guid movieId)
         {
             var deletedMovie = await this._movieService
