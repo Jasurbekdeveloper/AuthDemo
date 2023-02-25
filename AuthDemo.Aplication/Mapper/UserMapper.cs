@@ -1,18 +1,25 @@
 ﻿using AuthDemo.Aplication.DTO;
 using AuthDemo.Domain.Enums;
+using AuthDemo.Infrastructure.Audentification;
 using Library.Models.Domain;
 
 namespace AuthDemo.Aplication.Mapper;
 
 public static class UserMapper
 {
-    public static User MapToUser(UserCreationDto userCreationDto)
+    public static User MapToUser(
+        UserCreationDto userCreationDto,
+        PasswordHasher passwordHasher)
     {
+        string randomsalt = Guid.NewGuid().ToString();
+
         return new User()
         {
             Id = Guid.NewGuid(),
             Username = userCreationDto.userName,
-            Password = userCreationDto.password,
+            PasswordHash = passwordHasher.GenerationPassword(
+                userCreationDto.password,
+                randomsalt),
             EmailAddres = userCreationDto.email,
             Role = UserRole.User,
                                   

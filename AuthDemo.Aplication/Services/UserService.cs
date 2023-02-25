@@ -2,6 +2,7 @@
 using AuthDemo.Aplication.Mapper;
 using AuthDemo.Aplication.PagenationModel;
 using AuthDemo.Aplication.QueryExtentions;
+using AuthDemo.Infrastructure.Audentification;
 using AuthDemo.Infrastructure.Repositories.Users;
 using Microsoft.AspNetCore.Http;
 
@@ -10,6 +11,7 @@ namespace AuthDemo.Api.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly PasswordHasher passwordHasher;
         private readonly IHttpContextAccessor httpContextAccesssor;
 
         public UserService(IUserRepository userRepository,
@@ -21,7 +23,7 @@ namespace AuthDemo.Api.Services
 
         public async ValueTask<UserDto> CreateUserAsync(UserCreationDto userForCreationDto)
         {
-            var user = UserMapper.MapToUser(userForCreationDto);
+            var user = UserMapper.MapToUser(userForCreationDto,passwordHasher);
 
             var storageUser = await userRepository.InsertAsync(user);
 

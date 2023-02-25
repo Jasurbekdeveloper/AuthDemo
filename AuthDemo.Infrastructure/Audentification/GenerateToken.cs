@@ -17,7 +17,7 @@ public  class GenerateToken
         this.jwtOptions = jwtOptions.Value;
     }
 
-    public JwtSecurityToken GenerateAccess(User user)
+    public JwtSecurityToken GenerateAccessToken(User user)
     {
         var claims = new List<Claim>()
         {

@@ -8,7 +8,7 @@ public interface IGenericRepository<TEntity, TKey>
     IQueryable<TEntity> SelectAll();
     ValueTask<TEntity> SelectByIdAsync(TKey id);
 
-    ValueTask<TEntity> SelectByIdWithDetailsAsync(
+    ValueTask<IQueryable<TEntity>> GetByExpression(
         Expression<Func<TEntity, bool>> expression,
         string[] includes);
 

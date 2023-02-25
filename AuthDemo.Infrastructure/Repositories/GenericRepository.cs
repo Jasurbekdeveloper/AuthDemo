@@ -51,17 +51,21 @@ public class GenericRepository<TEntity, TKey> : IGenericRepository<TEntity , Gui
         return entityEntry;
     }
 
-    public async ValueTask<TEntity> SelectByIdWithDetailsAsync(Expression<Func<TEntity,
-        bool>> expression, string[] includes)
+    public virtual async ValueTask<IQueryable<TEntity>> GetByExpression(
+        Expression<Func<TEntity, bool>> expression,
+        string[] includes)
     {
-        IQueryable<TEntity> entities = this.SelectAll();
+        var entities = authDbContext
+            .Set<TEntity>()
+            .Where(expression);
 
-        foreach(var include in includes)
+
+        foreach (var item in includes)
         {
-            entities = entities.Include(include);
+            entities = entities.Include(item);
         }
 
-        return await entities.FirstOrDefaultAsync(expression);
+        return entities;
     }
 
     public async ValueTask<TEntity> UpdateAsync(TEntity entity)
